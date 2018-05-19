@@ -2,14 +2,15 @@
   text-align: center;
 }
 
-.button-box {
+/* * {
+  border: 1px solid red;
+} */
+
+
+.number-button {
+  margin: 2px;
+  font-size: 2.5em;
   width: 70px;
   height: 70px;
   display: inline-block;
-}
-
-.number-button {
-  width: 95%;
-  height: 95%;
-  font-size: 2.5em;
 }

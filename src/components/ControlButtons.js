@@ -1,13 +1,11 @@
 import React from 'react';
 import Button from './Button.js'
-// import './ControlButtons.css'
 
 const ControlButtons = ({ onPressSubmit, onPressClear })  => {
   return (
     <div>
-      {/* <button id="submit-button" onPress={onPressSubmit} >Submit</button> */}
-      <Button id="submit-button" onPress={onPressSubmit}>Submit</Button>
-      {/* <button id="clear-button" onPress={onPressClear} >Clear</button> */}
+      <Button className='submit-button' onPress={onPressSubmit}>Submit</Button>
+      <Button className='clear-button' onPress={onPressClear}>Clear</Button>
     </div>
   );
 }

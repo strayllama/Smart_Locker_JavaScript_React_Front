@@ -1,28 +1,27 @@
 import React from 'react';
-import Button from './Button.js'
+import NumberButton from './NumberButton.js'
 
 const NumberPad = ({ onPress })  => {
   return (
     <div>
       <div>
-        {/* <Button onPress={ onPress }>1</Button> */}
-        <div className="button-box"><button className="number-button">1</button></div>
-        <div className="button-box"><button className="number-button">2</button></div>
-        <div className="button-box"><button className="number-button">3</button></div>
+        <NumberButton className='number-button' onPress={onPress} num='1' >1</NumberButton>
+        <NumberButton className='number-button' onPress={onPress} num='2' >2</NumberButton>
+        <NumberButton className='number-button' onPress={onPress} num='3' >3</NumberButton>
       </div>
       <div>
-        <div className="button-box"><button className="number-button">4</button></div>
-        <div className="button-box"><button className="number-button">5</button></div>
-        <div className="button-box"><button className="number-button">6</button></div>
+        <NumberButton className='number-button' onPress={onPress} num='4' >4</NumberButton>
+        <NumberButton className='number-button' onPress={onPress} num='5' >5</NumberButton>
+        <NumberButton className='number-button' onPress={onPress} num='6' >6</NumberButton>
       </div>
       <div>
-        <div className="button-box"><button className="number-button">7</button></div>
-        <div className="button-box"><button className="number-button">8</button></div>
-        <div className="button-box"><button className="number-button">9</button></div>
+        <NumberButton className='number-button' onPress={onPress}  num='7' >7</NumberButton>
+        <NumberButton className='number-button' onPress={onPress} num='8' >8</NumberButton>
+        <NumberButton className='number-button' onPress={onPress} num='9' >9</NumberButton>
       </div>
       <div>
         <div className="space-box"></div>
-        <div className="button-box"><button className="number-button">0</button></div>
+        <NumberButton className='number-button' onPress={onPress} num='0' >0</NumberButton>
         <div className="space-box"></div>
       </div>
     </div>
