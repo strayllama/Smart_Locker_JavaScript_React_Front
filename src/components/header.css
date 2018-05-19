@@ -1,0 +1,10 @@
+.headerDiv {
+  flex: 1;
+  background-color: #222;
+  padding: 10px;
+}
+
+.headerText {
+  font-size: 3em;
+  color: white;
+}
