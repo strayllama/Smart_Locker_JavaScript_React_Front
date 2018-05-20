@@ -96,7 +96,8 @@ class App extends Component {
       this.setState({ code: newCode });
       this.increaseEntryCounter();
       this.setState({ submitOff: false });
-    } else { console.log('Clear to re-type code!');}
+    }
+    // else { console.log('Clear to re-type code!');}
   }
 
   deleteNumber() {
@@ -110,26 +111,27 @@ class App extends Component {
   }
 
   handleOnBackSpaceClick() {
-    console.log('BackSpace Button Clicked');
+    // console.log('BackSpace Button Clicked');
     this.deleteNumber();
   }
 
   handleOnSubmitClick() {
-    console.log('Submit Button Clicked');
+    // console.log('Submit Button Clicked');
     if (this.state.entryCounter === 4) {
       console.log('Submitting the following code:', this.codeString());
-      this.setMessage('Code Submitted!');
+      const submitMessage = 'Code Submitted: ' + this.codeString();
+      this.setMessage(submitMessage);
     }
   }
 
   handleOnClearClick() {
-    console.log('Clear Button Clicked');
+    // console.log('Clear Button Clicked');
     this.clearCode();
   }
 
   handleOnNumberClick(number) {
     this.enterNumber(number);
-    console.log('Number', number, 'Button Clicked');
+    // console.log('Number', number, 'Button Clicked');
   }
 
 
