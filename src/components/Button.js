@@ -1,18 +1,15 @@
 import React from 'react';
 
-const NumberButton = ({ onPress, children, className }) => {
+const NumberButton = ({ onPress, children, className, disabled }) => {
   return (
-    <button style={styles.buttonStyle} className={className} >{children}</button>
+    <button
+      className={className}
+      onClick={onPress}
+      disabled={disabled}
+    >{children}</button>
   );
 };
 
-const styles = {
-  buttonStyle: {
-  width: '95%',
-  height: '95%',
-  fontSize: 25,
-  display: 'inline-block'
-  }
-}
+
 
 export default NumberButton;

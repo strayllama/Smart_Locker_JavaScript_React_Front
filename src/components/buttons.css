@@ -1,0 +1,27 @@
+.pad-key {
+  margin: 2px;
+  font-size: 2.5em;
+  width: 70px;
+  height: 70px;
+  display: inline-block;
+}
+
+.num-key {
+  background-color: rgb(153, 153, 153);
+}
+
+.clr-key {
+  background-color: rgb(204, 64, 64);
+}
+
+.bck-key {
+  background-color: rgb(208, 139, 35);
+}
+
+.submit-key {
+  width: 40%;
+  margin: 10px 0;
+  font-size: 2.5em;
+  /* color: rgb(65, 255, 48); */
+  background-color: rgb(153, 153, 153);
+}

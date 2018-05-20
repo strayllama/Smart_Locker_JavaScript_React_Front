@@ -1,28 +1,30 @@
 import React from 'react';
 import NumberButton from './NumberButton.js'
+import './buttons.css';
 
-const NumberPad = ({ onPress })  => {
+
+const NumberPad = ({ onPressNum, onPressClear, onPressBack })  => {
   return (
     <div>
       <div>
-        <NumberButton className='number-button' onPress={onPress} num='1' >1</NumberButton>
-        <NumberButton className='number-button' onPress={onPress} num='2' >2</NumberButton>
-        <NumberButton className='number-button' onPress={onPress} num='3' >3</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='1' >1</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='2' >2</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='3' >3</NumberButton>
       </div>
       <div>
-        <NumberButton className='number-button' onPress={onPress} num='4' >4</NumberButton>
-        <NumberButton className='number-button' onPress={onPress} num='5' >5</NumberButton>
-        <NumberButton className='number-button' onPress={onPress} num='6' >6</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='4' >4</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='5' >5</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='6' >6</NumberButton>
       </div>
       <div>
-        <NumberButton className='number-button' onPress={onPress}  num='7' >7</NumberButton>
-        <NumberButton className='number-button' onPress={onPress} num='8' >8</NumberButton>
-        <NumberButton className='number-button' onPress={onPress} num='9' >9</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum}  num='7' >7</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='8' >8</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='9' >9</NumberButton>
       </div>
       <div>
-        <div className="space-box"></div>
-        <NumberButton className='number-button' onPress={onPress} num='0' >0</NumberButton>
-        <div className="space-box"></div>
+        <NumberButton className='bck-key pad-key' onPress={onPressBack}>Del</NumberButton>
+        <NumberButton className='num-key pad-key' onPress={onPressNum} num='0' >0</NumberButton>
+        <NumberButton className='clr-key pad-key' onPress={onPressClear}>Clr</NumberButton>
       </div>
     </div>
   );

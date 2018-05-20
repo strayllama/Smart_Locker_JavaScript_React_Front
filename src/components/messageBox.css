@@ -2,7 +2,7 @@
   padding: 20px 0px;
   background-color: rgb(111, 111, 111);
   vertical-align: bottom;
-  height: 4.5em;
+  min-height: 4.5em;
 }
 
 #message-text {

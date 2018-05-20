@@ -1,0 +1,11 @@
+.digit {
+  font-size: 3.5em;
+  display: inline-block;
+  margin: 2px;
+  width: 53px;
+  height: 65px;
+  color: rgb(5, 166, 2);
+  background-color: rgb(45, 45, 45);
+  border: 1px solid rgb(87, 87, 87);
+  border-radius: 3px;
+}
