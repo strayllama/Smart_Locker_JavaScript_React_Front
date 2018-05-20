@@ -1,12 +1,15 @@
 #message-box{
   padding: 20px 0px;
-  background-color: rgb(111, 111, 111);
+  /* background-color: rgb(111, 111, 111); */
+  background-color: rgb(60, 59, 59);
   vertical-align: bottom;
   min-height: 4.5em;
 }
 
 #message-text {
-  font-size: 2em;
+  font-size: 1.8em;
+  font-family: 'Courier';
+  font-weight: 400;
   margin: 0;
-  color: rgb(196, 200, 0);
+  color: rgb(34, 130, 185);
 }

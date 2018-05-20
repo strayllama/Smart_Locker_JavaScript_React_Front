@@ -36,7 +36,11 @@ class App extends Component {
   }
 
   setMessage(newMessage) {
-    this.setState({ message: newMessage });
+    if (newMessage === undefined) {
+      this.setState({ message: 'Type your 4 digit code to open locker. i.e. #3456' });
+    } else {
+      this.setState({ message: newMessage });
+    }
   }
 
   codeString() {
@@ -46,7 +50,7 @@ class App extends Component {
 
   resetEntryCounter() {
     this.setState({ entryCounter: 0 });
-    this.setMessage('Type your 4 digit code to open locker. i.e. #3456');
+    this.setMessage();
   }
 
   clearCode() {
@@ -66,6 +70,7 @@ class App extends Component {
     const newCount = this.state.entryCounter - 1;
     this.setState({ entryCounter: newCount });
     this.setState({ submitOff: true });
+    this.setMessage();
   }
 
   enterNumber(number) {
@@ -131,7 +136,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Header>{this.state.lockerBankId} Smart Locker</Header>
+        <Header>{this.state.lockerBankName} Smart Locker</Header>
         <MessageBox text={this.state.message} />
         <DisplayPane
           num1={this.state.code[0]}
