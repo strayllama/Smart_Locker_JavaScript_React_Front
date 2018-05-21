@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import IsCodeValid from './services/isCodeValid.js'
 import Header from './components/Header.js'
 import MessageBox from './components/MessageBox.js'
 import DisplayPane from './components/DisplayPane.js'
@@ -9,16 +10,42 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super(props);
-
+    // const isCodeValid = new IsCodeValid();
     this.state = {
       lockerBankName: "Liberton",
       message: 'Type your 4 digit code to open locker. i.e. #3456',
       code: ['-', '-', '-', '-'],
       entryCounter: 0,
+      parcels: [{
+        id: 1001,
+        customer: 'Bob',
+        retailer: 'Maplins',
+        location: 'Liberton',
+        lockerBox: 1,
+        dropOffCode: 9991,
+        pickUpCode: 8881,
+        returnCode: 7771}, {
+        id: 1002,
+        customer: 'Steve',
+        retailer: 'Maplins',
+        location: 'Liberton',
+        lockerBox: 2,
+        dropOffCode: 9992,
+        pickUpCode: 8882,
+        returnCode: 7772}, {
+        id: 1003,
+        customer: 'Joe',
+        retailer: 'Maplins',
+        location: 'Liberton',
+        lockerBox: 3,
+        dropOffCode: 9993,
+        pickUpCode: 8883,
+        returnCode: 7773}
+      ],
       lockers: [
-        { number: 1, empty: false, parcelId: 111 },
-        { number: 2, empty: false, parcelId: 112 },
-        { number: 3, empty: true, parcelId: null },
+        { number: 1, empty: false, parcelId: 1001 },
+        { number: 2, empty: false, parcelId: 1002 },
+        { number: 3, empty: false, parcelId: 1003 },
         { number: 4, empty: true, parcelId: null },
         { number: 5, empty: true, parcelId: null },
         { number: 6, empty: true, parcelId: null },
@@ -26,7 +53,8 @@ class App extends Component {
         { number: 8, empty: true, parcelId: null },
         { number: 9, empty: true, parcelId: null }
       ],
-      submitOff: true
+      submitOff: true,
+      enteredCode: null
     }
 
     this.handleOnClearClick = this.handleOnClearClick.bind(this);
@@ -115,12 +143,36 @@ class App extends Component {
     this.deleteNumber();
   }
 
+  isCodeValid(code) {
+    const codeInt = parseInt(code, 10);
+    // console.log("CHECKING CODE IS VALID");
+    for(const parcel of this.state.parcels) {
+      // console.log("Is it for parcels for customer:", parcel.customer);
+      if (codeInt === parcel.pickUpCode) {
+        const message = `${code} Accepted! ${parcel.customer}, please find your parcel in box: ${parcel.lockerBox}`;
+        this.setMessage(message);
+      } else if (codeInt === parcel.dropOffCode) {
+        const message = `${code} for Service Person, please place NEW parcel in box: 4`;
+        this.setMessage(message);
+      } else if (codeInt === parcel.returnCode) {
+        const message = `${code} for Service Person, please find parcel to RETURN in box: ${parcel.lockerBox}`;
+        this.setMessage(message);
+      } else {
+        // this.setMessage(code, "Not recognised, please try again");
+      }
+    }
+  }
+
   handleOnSubmitClick() {
     // console.log('Submit Button Clicked');
     if (this.state.entryCounter === 4) {
-      console.log('Submitting the following code:', this.codeString());
-      const submitMessage = 'Code Submitted: ' + this.codeString();
-      this.setMessage(submitMessage);
+      this.setState({ enteredCode: this.codeString() }, function () {
+        console.log('Submitting the following code:', this.state.enteredCode);
+        const submitMessage = 'Code Submitted: ' + this.state.enteredCode;
+        this.setMessage(submitMessage);
+        this.isCodeValid(this.codeString());
+      });
+      // console.log("This for handleOnSubmitClick: ", this);
     }
   }
 
@@ -133,6 +185,26 @@ class App extends Component {
     this.enterNumber(number);
     // console.log('Number', number, 'Button Clicked');
   }
+
+  getLocationParcelData() {
+    const url = `http://localhost:9090/parcelsLoc/${this.state.lockerBankName}`;
+    const request = new XMLHttpRequest();
+    request.open('GET', url);
+
+    request.addEventListener('load', () => {
+      if (request.status !== 200) return;
+      const jsonString = request.responseText;
+      const parcelData = JSON.parse(jsonString);
+      console.log(parcelData);
+      this.setState({ parcels: parcelData })
+    }) // end addEventListener
+
+    request.send();
+  }
+
+  componentDidMount() {
+    this.getLocationParcelData();
+  } // end componentDidMount
 
 
   render() {
@@ -158,7 +230,8 @@ class App extends Component {
         />
       </div>
     );
-  }
-}
+  } // end render()
+
+} // end class App
 
 export default App;
