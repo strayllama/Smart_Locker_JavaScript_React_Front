@@ -10,13 +10,15 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super(props);
-    // const isCodeValid = new IsCodeValid();
     this.state = {
       lockerBankName: "Liberton",
       message: 'Type your 4 digit code to open locker. i.e. #3456',
       code: ['-', '-', '-', '-'],
       entryCounter: 0,
-      parcels: [{
+      // lockerBox is used for locationStatus also.
+      // 0 for en-route to locker. 1-10 for in lockerBox of that number
+      // -1 for picked up by customer, -2 picked up by service person.
+      parcels: [{  // This should start empty, but have seeded it for testing
         id: 1001,
         customer: 'Bob',
         retailer: 'Maplins',
@@ -37,15 +39,15 @@ class App extends Component {
         customer: 'Joe',
         retailer: 'Maplins',
         location: 'Liberton',
-        lockerBox: 3,
+        lockerBox: 0,
         dropOffCode: 9993,
         pickUpCode: 8883,
         returnCode: 7773}
       ],
-      lockers: [
+      lockers: [  // This should also start empty, but seeded to match parcels above for testing.
         { number: 1, empty: false, parcelId: 1001 },
         { number: 2, empty: false, parcelId: 1002 },
-        { number: 3, empty: false, parcelId: 1003 },
+        { number: 3, empty: true, parcelId: null },
         { number: 4, empty: true, parcelId: null },
         { number: 5, empty: true, parcelId: null },
         { number: 6, empty: true, parcelId: null },
@@ -125,7 +127,6 @@ class App extends Component {
       this.increaseEntryCounter();
       this.setState({ submitOff: false });
     }
-    // else { console.log('Clear to re-type code!');}
   }
 
   deleteNumber() {
@@ -139,26 +140,42 @@ class App extends Component {
   }
 
   handleOnBackSpaceClick() {
-    // console.log('BackSpace Button Clicked');
     this.deleteNumber();
+  }
+
+  parcelArrived(parcel) {
+
+    return 5;
+  }
+
+// locationStatus is 0 for en-route to locker. 1-10 for in lockerBox of that number
+//                  -1 for picked up by customer, -2 picked up by service person.
+  parcelCollected(parcel, locationStatus) {
+    if (locationStatus === -1) { // -1 means customer collected
+
+    } else if (locationStatus === -2) { // -2 means service person returning
+
+    }
   }
 
   isCodeValid(code) {
     const codeInt = parseInt(code, 10);
-    // console.log("CHECKING CODE IS VALID");
     for(const parcel of this.state.parcels) {
-      // console.log("Is it for parcels for customer:", parcel.customer);
-      if (codeInt === parcel.pickUpCode) {
-        const message = `${code} Accepted! ${parcel.customer}, please find your parcel in box: ${parcel.lockerBox}`;
-        this.setMessage(message);
-      } else if (codeInt === parcel.dropOffCode) {
-        const message = `${code} for Service Person, please place NEW parcel in box: 4`;
-        this.setMessage(message);
-      } else if (codeInt === parcel.returnCode) {
-        const message = `${code} for Service Person, please find parcel to RETURN in box: ${parcel.lockerBox}`;
-        this.setMessage(message);
+      const lockerBox = parseInt(parcel.lockerBox, 10);
+      if (codeInt === parcel.pickUpCode && lockerBox > 0) {
+        this.setMessage(`${codeInt} Accepted! ${parcel.customer}, please find your parcel in box: ${parcel.lockerBox}`);
+        this.parcelCollected(parcel, -1); // -1 to indicate picked up by customer
+        break
+      } else if (codeInt === parcel.dropOffCode && lockerBox === 0) {
+        const box = this.parcelArrived(parcel);
+        this.setMessage(`${code} for Service Person, please place NEW parcel in box: ${box}`);
+        break
+      } else if (codeInt === parcel.returnCode && lockerBox > 0) {
+        this.setMessage(`${code} for Service Person, please find parcel to RETURN in box: ${parcel.lockerBox}`);
+        this.parcelCollected(parcel, -2); // -2 to indicate parcel has been returned
+        break
       } else {
-        // this.setMessage(code, "Not recognised, please try again");
+        this.setMessage(`${code}, Invalid code, please try again`);
       }
     }
   }

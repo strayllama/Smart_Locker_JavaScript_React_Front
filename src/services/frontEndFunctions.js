@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-
-class frontEndFunctions extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-// isCodeValid.checkCode(code) {
+// import React, { Component } from 'react';
 //
+// class frontEndFunctions extends Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//
+// // isCodeValid.checkCode(code) {
+// //
+// // }
+//
+// render() {
+//     return (
+//       <div></div>
+//     );
+//   }
 // }
-
-render() {
-    return (
-      <div></div>
-    );
-  }
-}
-
-export default frontEndFunctions;
+//
+// export default frontEndFunctions;
