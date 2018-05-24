@@ -15,7 +15,7 @@ class App extends Component {
       message: 'Type your 4 digit code to open locker. i.e. #3456',
       code: ['-', '-', '-', '-'],
       entryCounter: 0,
-      // lockerBox is used for locationStatus also.
+      // lockerBox is used for locationStatus also.  NEED TO CHANGE NAME TO BETTER!
       // 0 for en-route to locker. 1-10 for in lockerBox of that number
       // -1 for picked up by customer, -2 picked up by service person.
       parcels: [{  // This should start empty, but have seeded it for testing
@@ -42,7 +42,15 @@ class App extends Component {
         lockerBox: 0,
         dropOffCode: 9993,
         pickUpCode: 8883,
-        returnCode: 7773}
+        returnCode: 7773}, {
+        id: 1004,
+        customer: 'Helen',
+        retailer: 'Runners World',
+        location: 'Liberton',
+        lockerBox: 0,
+        dropOffCode: 9994,
+        pickUpCode: 8884,
+        returnCode: 7774}
       ],
       lockers: [  // This should also start empty, but seeded to match parcels above for testing.
         { number: 1, empty: false, parcelId: 1001 },
@@ -65,7 +73,7 @@ class App extends Component {
     this.handleOnBackSpaceClick = this.handleOnBackSpaceClick.bind(this);
   }
 
-  setMessage(newMessage) {
+  setMessage(newMessage) {  // Gives default message to user, or displays passed string.
     if (newMessage === undefined) {
       this.setState({ message: 'Type your 4 digit code to open locker. i.e. #3456' });
     } else {
@@ -73,37 +81,36 @@ class App extends Component {
     }
   }
 
-  codeString() {
+  codeString() {  // takes the array of digets entered and returns a 4 char string
     const codeString = this.state.code[0] + this.state.code[1] + this.state.code[2] + this.state.code[3]
     return codeString;
   }
 
-  resetEntryCounter() {
+  resetEntryCounter() {  // resets the index counter for which digit the user has most recently pressed
     this.setState({ entryCounter: 0 });
     this.setMessage();
   }
 
-  clearCode() {
+  clearCode() {  // called on re-set button
     const clearedCode = ['-', '-', '-', '-'];
-    this.setState.code = clearedCode;
-    this.setState({ code: clearedCode });
-    this.resetEntryCounter();
-    this.setState({ submitOff: true });
+    this.setState({ code: clearedCode }); // resets the code display
+    this.resetEntryCounter();  // reset 'typed code' char index counter
+    this.setState({ submitOff: true });  // turn off submit button
   }
 
-  increaseEntryCounter() {
+  increaseEntryCounter() {  // When key pressed increase 'typed code' char index counter
     const newCount = this.state.entryCounter + 1;
     this.setState({ entryCounter: newCount });
   }
 
-  decreaseEntryCounter() {
+  decreaseEntryCounter() { // called when Del button pressed:
     const newCount = this.state.entryCounter - 1;
-    this.setState({ entryCounter: newCount });
-    this.setState({ submitOff: true });
-    this.setMessage();
+    this.setState({ entryCounter: newCount }); // reduces 'typed code' char index counter
+    this.setState({ submitOff: true }); // make sure submit is turned off
+    this.setMessage(); // sets message to default
   }
 
-  enterNumber(number) {
+  enterNumber(number) {  // when a key pad is pressed - number on pad is passed and added to the code array at index of the 'type code' counter.
     const index = this.state.entryCounter;
     if (index === 0) {
       const newCode = this.state.code;
@@ -125,32 +132,47 @@ class App extends Component {
       newCode[3] = number;
       this.setState({ code: newCode });
       this.increaseEntryCounter();
-      this.setState({ submitOff: false });
-    }
+      this.setState({ submitOff: false });  // ONLY WHEN 4 digets have been entered does the submit button turn on.
+    } // no else, as more number keys should have no affect.
   }
 
-  deleteNumber() {
+
+  handleOnBackSpaceClick() {  // del button clicked
     const index = this.state.entryCounter;
-    if (index > 0) {
+    if (index > 0) {  // only when a numebr has already been entered
       const newCode = this.state.code;
-      newCode[index - 1] = '-';
+      newCode[index - 1] = '-'; // replace current 'typed code' counter with '-'
       this.setState({ code: newCode });
-      this.decreaseEntryCounter();
+      this.decreaseEntryCounter(); // decrease 'typed code' counter
     }
-  }
-
-  handleOnBackSpaceClick() {
-    this.deleteNumber();
   }
 
   parcelArrived(parcel) {
-
-    return 5;
+    // no reply to deal with being full yet, or if goes wrong for other reason.
+    let lockerNum = null;
+    let lockersArray = this.state.lockers;
+    console.log(lockersArray);
+    for (const locker of this.state.lockers) {  //  finds next empty locker and gives that number to the parcel, returns the number for display, and gives that locker the parcel ID and empty=false.
+      if (locker.empty) {
+        lockerNum = locker.number;
+        console.log("Parcel had num locker:", parcel.lockerBox);
+        parcel.lockerBox = lockerNum;
+        console.log("Parcel now has num locker:", parcel.lockerBox);
+        lockersArray[lockerNum-1].parcelId = parcel.id;
+        lockersArray[lockerNum-1].empty = false;
+        this.setState({ lockers: lockersArray });
+        console.log("Locker:", lockerNum, "now has parcelid:", this.state.lockers[lockerNum].parcelId + this.state.lockers[lockerNum].empty);
+        break;
+      }
+    }
+    return lockerNum;
   }
+
 
 // locationStatus is 0 for en-route to locker. 1-10 for in lockerBox of that number
 //                  -1 for picked up by customer, -2 picked up by service person.
   parcelCollected(parcel, locationStatus) {
+    parcel.lockerBox = locationStatus;  // set locker box to represent pickup.
     if (locationStatus === -1) { // -1 means customer collected
 
     } else if (locationStatus === -2) { // -2 means service person returning
@@ -158,22 +180,24 @@ class App extends Component {
     }
   }
 
-  isCodeValid(code) {
-    const codeInt = parseInt(code, 10);
+// Assumes that customer only recieves the code after the parcel has arrived.
+  isCodeValid(code) {  // Check 4 digit code against 'arrieved' and 'due to arrive' package codes.
+    const codeInt = parseInt(code, 10);  // string to int. SHOULD probably store the codes as string instead.
     for(const parcel of this.state.parcels) {
-      const lockerBox = parseInt(parcel.lockerBox, 10);
+      const lockerBox = parcel.lockerBox;
+      // Maybe a switch case statement would be easier to read?
       if (codeInt === parcel.pickUpCode && lockerBox > 0) {
         this.setMessage(`${codeInt} Accepted! ${parcel.customer}, please find your parcel in box: ${parcel.lockerBox}`);
         this.parcelCollected(parcel, -1); // -1 to indicate picked up by customer
-        break
+        return
       } else if (codeInt === parcel.dropOffCode && lockerBox === 0) {
         const box = this.parcelArrived(parcel);
         this.setMessage(`${code} for Service Person, please place NEW parcel in box: ${box}`);
-        break
+        return
       } else if (codeInt === parcel.returnCode && lockerBox > 0) {
         this.setMessage(`${code} for Service Person, please find parcel to RETURN in box: ${parcel.lockerBox}`);
         this.parcelCollected(parcel, -2); // -2 to indicate parcel has been returned
-        break
+        return
       } else {
         this.setMessage(`${code}, Invalid code, please try again`);
       }
